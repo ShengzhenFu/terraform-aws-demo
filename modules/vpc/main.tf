@@ -179,3 +179,21 @@ resource "aws_lb" "alb" {
   security_groups    = [aws_security_group.alb_sg.id]
   subnets            = [for subnet in aws_subnet.public_subnet : subnet.id]
 }
+
+resource "aws_security_group" "rds_security_group" {
+  name        = "rds_sg_${var.environment}"
+  description = "security group for RDS in isolated subnet"
+  vpc_id      = aws_vpc.test-vpc.id
+  ingress = [{ # allow access from vpc
+    description      = "allow access from vpc"
+    from_port        = 5432
+    to_port          = 5432
+    protocol         = "tcp"
+    cidr_blocks      = [var.cidr]
+    security_groups  = []
+    ipv6_cidr_blocks = []
+    prefix_list_ids  = []
+    self             = false
+  }]
+  tags = { Name : "rds_sg_${var.environment}" }
+}

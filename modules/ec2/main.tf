@@ -84,6 +84,17 @@ resource "aws_security_group" "private_ec2_sg" {
     self             = false
     },
     {
+      description      = "allow https from vpc"
+      from_port        = 443
+      to_port          = 443
+      protocol         = "tcp"
+      cidr_blocks      = [var.cidr_vpc]
+      security_groups  = []
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      self             = false
+    },
+    {
       description      = "allow https from ssh"
       from_port        = 22
       to_port          = 22
